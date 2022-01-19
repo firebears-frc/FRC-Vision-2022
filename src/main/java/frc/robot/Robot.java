@@ -7,12 +7,17 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.DriveController;
 
 import com.ctre.phoenix.*;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import org.photonvision.*;
+
+//
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -26,6 +31,14 @@ public class Robot extends TimedRobot {
   private TalonSRX srx = new TalonSRX(25);
 
   private RobotContainer m_robotContainer;
+
+  final int frontLeftID = 2;
+  final int rearLeftID = 3;
+
+  final int frontRightID = 4;
+  final int rearRightID = 5;
+
+  private DriveController dc = new DriveController(frontLeftID,frontRightID,rearLeftID,rearRightID);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -86,10 +99,10 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     var results = pc.getLatestResult();
     if(results.hasTargets()){
-      srx.set(TalonSRXControlMode.PercentOutput, 0.1);
+      dc.Drive(0, results.getBestTarget().getYaw());
     }
     else{
-      srx.set(TalonSRXControlMode.PercentOutput, 0);
+      dc.Drive(0, 0);
     }
   }
 
@@ -102,4 +115,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
+
+  private void TurnRobot(double yaw){
+
+  }
 }

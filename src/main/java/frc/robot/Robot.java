@@ -78,6 +78,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+
+  }
+
+  /** This function is called periodically during operator control. */
+  @Override
+  public void teleopPeriodic() {
     var results = pc.getLatestResult();
     if(results.hasTargets()){
       srx.set(TalonSRXControlMode.PercentOutput, 0.1);
@@ -86,10 +92,6 @@ public class Robot extends TimedRobot {
       srx.set(TalonSRXControlMode.PercentOutput, 0);
     }
   }
-
-  /** This function is called periodically during operator control. */
-  @Override
-  public void teleopPeriodic() {}
 
   @Override
   public void testInit() {

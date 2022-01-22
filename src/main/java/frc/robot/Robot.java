@@ -24,19 +24,17 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  /*
-   * Swapped motors to move backwards
-   * Commented code is original
+  /* OLD Robot ID's
+  final int frontLeftID = 4;
+  final int rearLeftID = 5;
+  final int frontRightID = 3;
+  final int rearRightID = 2;
   */
 
-  //final int frontLeftID = 2;
-  final int frontLeftID = 5;
-  //final int rearLeftID = 3; 
-  final int rearLeftID = 4;
-  //final int frontRightID = 4;
-  final int frontRightID = 3;
-  //final int rearRightID = 5;
-  final int rearRightID = 2;
+  final int frontLeftID = 2;
+  final int rearLeftID = 3;
+  final int frontRightID = 5;
+  final int rearRightID = 4;
 
   final double camHeight = Units.inchesToMeters(17);
   final double targetHeight = 5;

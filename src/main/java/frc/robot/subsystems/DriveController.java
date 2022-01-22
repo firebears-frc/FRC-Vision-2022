@@ -13,6 +13,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.*;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 // DriveController Class extending Subsystem to be called in main robotcode
@@ -34,14 +35,50 @@ public class DriveController extends SubsystemBase {
 
     //make back wheels follow front wheels
     backL.follow(frontL);
-    backR.follow(backR);
+    backR.follow(frontR);
 
     // create a drifferentialDrive and give it our CANSparkMax's
     robotDrive = new DifferentialDrive(frontL, frontR);
+    Break(true);
+  }
+
+  public void setDrive(double left,double right){
+    frontL.set(left);
+    //backL.set(left);
+
+    frontR.set(right);
+    //backR.set(right);
   }
 
   public void Drive(double speed,double rotation){
     //Drive the robot using Speed & Rotation
     robotDrive.arcadeDrive(speed,rotation);
+  }
+
+  public static double Clamp(double x, double min, double max){
+    if(x > max){
+      return max;
+    }
+    else if(x < min){
+      return min;
+    }
+    else{
+      return x;
+    }
+  }
+
+  public void Break(boolean enabled){
+    if(enabled){
+      frontL.setIdleMode(IdleMode.kBrake);
+      frontR.setIdleMode(IdleMode.kBrake);
+      backL.setIdleMode(IdleMode.kBrake);
+      backR.setIdleMode(IdleMode.kBrake);
+    }
+    else{
+      frontL.setIdleMode(IdleMode.kCoast);
+      frontR.setIdleMode(IdleMode.kCoast);
+      backL.setIdleMode(IdleMode.kCoast);
+      backR.setIdleMode(IdleMode.kCoast);
+    }
   }
 }

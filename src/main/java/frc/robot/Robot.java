@@ -99,13 +99,18 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    double speed = Math.min(0.1 * vs.getTargetDistence(), 0.5);
+    double speed = Math.min(0.05 * vs.getTargetDistence(), 0.1);
 
     if(vs.getTargetDistence() <= 10){
       speed = 0;
     }
 
-    dc.Drive(speed, vs.getTargetYaw());
+    if(vs.getBestTarget() != null){
+      dc.Drive(speed, vs.getTargetYaw());
+    }
+    else{
+      dc.Drive(0,0);
+    }
   }
 
   @Override

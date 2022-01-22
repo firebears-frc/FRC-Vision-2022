@@ -23,11 +23,21 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  final int frontLeftID = 2;
-  final int rearLeftID = 3;
+  /*
+   * Swapped motors to move backwards
+   * Commented code is original
+  */
 
-  final int frontRightID = 4;
-  final int rearRightID = 5;
+  //final int frontLeftID = 2;
+  final int frontLeftID = 5;
+  //final int rearLeftID = 3; 
+  final int rearLeftID = 4;
+  //final int frontRightID = 4;
+  final int frontRightID = 3;
+  //final int rearRightID = 5;
+  final int rearRightID = 2;
+
+
 
   private DriveController dc = new DriveController(frontLeftID,frontRightID,rearLeftID,rearRightID);
   private Vision vs = new Vision("gloworm",2,5,0);

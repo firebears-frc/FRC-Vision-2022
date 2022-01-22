@@ -5,7 +5,9 @@
 package frc.robot;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.DriveController;
@@ -24,6 +26,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  Joystick stick = new Joystick(0);
 
   /* OLD Robot ID's
   final int frontLeftID = 4;
@@ -38,7 +41,7 @@ public class Robot extends TimedRobot {
   final int rearRightID = 4;
 
   final double camHeight = Units.inchesToMeters(17);
-  final double targetHeight = 5;
+  final double targetHeight = Units.inchesToMeters(48);
 
   final double ANGULAR_P = 0.1;
   final double ANGULAR_D = 0.0;
@@ -105,7 +108,14 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     double speed = Math.min(0.05 * vs.getTargetDistence(), 0.1);
+    // Calculate angular turn power
+    // -1.0 required to ensure positive PID controller effort _increases_ yaw
     double rotation = -turnController.calculate(vs.getTargetYaw(),0);
+
+    SmartDashboard.putNumber("VisionTarget_Distence", vs.getTargetDistence());
+
+    // set speed faster or slower based on joysticks Left Stick's Position
+    speed = stick.getY() * 0.05;
 
     if(vs.getTargetDistence() <= 10){
       speed = 0;

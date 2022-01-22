@@ -8,14 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.DriveController;
-
-import com.ctre.phoenix.*;
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import org.photonvision.*;
+import frc.robot.subsystems.Vision;
 
 //
 
@@ -27,8 +20,6 @@ import org.photonvision.*;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private PhotonCamera pc = new PhotonCamera("gloworm");
-  private TalonSRX srx = new TalonSRX(25);
 
   private RobotContainer m_robotContainer;
 
@@ -39,6 +30,7 @@ public class Robot extends TimedRobot {
   final int rearRightID = 5;
 
   private DriveController dc = new DriveController(frontLeftID,frontRightID,rearLeftID,rearRightID);
+  private Vision vs = new Vision("gloworm",2,5,0);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -97,13 +89,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    var results = pc.getLatestResult();
-    if(results.hasTargets()){
-      dc.Drive(0, results.getBestTarget().getYaw());
-    }
-    else{
-      dc.Drive(0, 0);
-    }
+    double speed = Math.min(0.1 * vs.getTargetDistence(), 0.5);
+    dc.Drive(speed, vs.getTargetYaw());
   }
 
   @Override
@@ -115,9 +102,4 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
-
-
-  private void TurnRobot(double yaw){
-
-  }
 }

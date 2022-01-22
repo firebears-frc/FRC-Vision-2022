@@ -12,6 +12,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.DriveController;
 import frc.robot.subsystems.Vision;
+
+import java.io.Console;
+
 import edu.wpi.first.math.controller.PIDController;
 
 //
@@ -115,14 +118,15 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("VisionTarget_Distence", vs.getTargetDistence());
 
     // set speed faster or slower based on joysticks Left Stick's Position
-    speed = stick.getY() * 0.05;
+    speed = stick.getY() * 0.25;
+    System.out.printf("Speed : " + speed + " Distence:  " + vs.getTargetDistence());
 
     if(vs.getTargetDistence() <= 10){
-      speed = 0;
+      //speed = 0;
     }
 
     if(vs.getBestTarget() != null){
-      dc.Drive(0, rotation);
+      dc.Drive(speed, vs.getTargetYaw());
     }
     else{
       dc.Drive(0,0);

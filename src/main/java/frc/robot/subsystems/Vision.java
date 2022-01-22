@@ -25,7 +25,7 @@ public class Vision extends SubsystemBase {
   private double camHeight;
   private double targetHeight;
   private double camPitch;
-  public Vision(String CameraName, int cH, int tH, int cP) {
+  public Vision(String CameraName, double cH, double tH, double cP) {
     photoncam = new PhotonCamera(CameraName);
     camHeight = cH;
     targetHeight = tH;

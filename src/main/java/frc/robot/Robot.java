@@ -38,10 +38,11 @@ public class Robot extends TimedRobot {
   //final int rearRightID = 5;
   final int rearRightID = 2;
 
-
+  final double camHeight = Units.inchesToMeters(17);
+  final double targetHeight = 5;
 
   private DriveController dc = new DriveController(frontLeftID,frontRightID,rearLeftID,rearRightID);
-  private Vision vs = new Vision("gloworm",2,5,0);
+  private Vision vs = new Vision("gloworm",camHeight,targetHeight,0);
 
   /**
    * This function is run when the robot is first started up and should be used for any

@@ -52,6 +52,7 @@ public class Vision extends SubsystemBase {
     return PhotonTarget;
   }
 
+  // returns yaw
   public double getTargetYaw(){
     if(PhotonTarget != null){
       return PhotonTarget.getYaw();
@@ -61,6 +62,8 @@ public class Vision extends SubsystemBase {
     }
   }
 
+
+  // returns distences in meters
   public double getTargetDistence(){
     return PhotonUtils.calculateDistanceToTargetMeters(
             camHeight,

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -100,6 +101,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     double speed = Math.min(0.1 * vs.getTargetDistence(), 0.5);
+
+    if(vs.getTargetDistence() <= 10){
+      speed = 0;
+    }
+
     dc.Drive(speed, vs.getTargetYaw());
   }
 

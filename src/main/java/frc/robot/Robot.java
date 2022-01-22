@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.DriveController;
 import frc.robot.subsystems.Vision;
+import edu.wpi.first.math.controller.PIDController;
 
 //
 
@@ -38,6 +39,10 @@ public class Robot extends TimedRobot {
 
   final double camHeight = Units.inchesToMeters(17);
   final double targetHeight = 5;
+
+  final double ANGULAR_P = 0.1;
+  final double ANGULAR_D = 0.0;
+  PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
 
   private DriveController dc = new DriveController(frontLeftID,frontRightID,rearLeftID,rearRightID);
   private Vision vs = new Vision("gloworm",camHeight,targetHeight,0);
@@ -100,13 +105,14 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     double speed = Math.min(0.05 * vs.getTargetDistence(), 0.1);
+    double rotation = -turnController.calculate(vs.getTargetYaw(),0);
 
     if(vs.getTargetDistence() <= 10){
       speed = 0;
     }
 
     if(vs.getBestTarget() != null){
-      dc.Drive(speed, vs.getTargetYaw());
+      dc.Drive(0, rotation);
     }
     else{
       dc.Drive(0,0);

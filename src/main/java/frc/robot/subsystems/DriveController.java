@@ -42,17 +42,21 @@ public class DriveController extends SubsystemBase {
     Break(true);
   }
 
-  public void setDrive(double left,double right){
-    frontL.set(left);
-    //backL.set(left);
+  /*
+    robotDrive.tankDrive(rotation, rotation);
+    backDrive.tankDrive(speed, speed);
+  */
 
-    frontR.set(right);
-    //backR.set(right);
+  public void setDrive(boolean forward,double rotation){
+    if(forward){
+      robotDrive.tankDrive(-rotation, rotation);
+      return;
+    }
+    robotDrive.tankDrive(rotation, rotation);
   }
 
   public void Drive(double speed,double rotation){
-    //Drive the robot using Speed & Rotation
-    robotDrive.arcadeDrive(speed,rotation);
+    //Drive the robot using Speed & Rotation  
   }
 
   public static double Clamp(double x, double min, double max){

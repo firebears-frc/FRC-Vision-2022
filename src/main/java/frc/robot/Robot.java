@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
   final double targetHeight = Units.inchesToMeters(19);
 
   private DriveController dc = new DriveController(frontLeftID,frontRightID,rearLeftID,rearRightID);
-  private Vision vs = new Vision("gloworm");
+  private Vision vs = new Vision("gloworm",camHeight,targetHeight,32.0);
 
   private PIDController pid = new PIDController(0.75, 0, 0);
 
@@ -53,7 +53,6 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    pid.setTolerance(0.15);
   }
 
   /**
@@ -74,9 +73,7 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {
-    dc.Break(false);
-  }
+  public void disabledInit() {}
 
   @Override
   public void disabledPeriodic() {}
@@ -90,8 +87,12 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    //System.out.println(vs.getTargetDistence() + " out of " + vs.getTargetYaw());
-    //dc.setDriveV(-vs.getTargetDistence(),vs.getTargetYaw(),0.75);
+    double rotation = 0;
+
+    if(vs.getBestTarget() != null){
+      rotation = pid.calculate(vs.getTargetYaw());
+    }
+    System.out.println("Rot: " + rotation + " |  Distence > " + vs.getTargetDistence());
   }
 
   @Override
@@ -99,24 +100,56 @@ public class Robot extends TimedRobot {
     dc.Break(true);
   }
 
-
-  double lastYaw = 0;
-  double lastSpeed = 0;
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    // give the yaw position of the robot
-    vs.getRobotYaw(0);
-    if(stick.getLeftBumper() == true){
-      dc.setDrive(stick.getLeftY(), stick.getRightX());
+    double speed = Math.pow(vs.getTargetYaw()/25, 1.1);
+    // Calculate angular turn power
+    // -1.0 required to ensure positive PID controller effort _increases_ yaw
+    double rotation = 0;
+
+    if(vs.getBestTarget() != null){
+      rotation = pid.calculate(vs.getTargetYaw());
     }
-    else if(stick.getRightBumper() == true){
-      dc.setDrive(0, stick.getRightX());
+
+    // set speed faster or slower based on joysticks Left Stick's Position
+    //speed = stick.getY() * 0.25;
+    //System.out.printf("\n----->Target Dist : " + Units.metersToFeet(vs.getTargetDistence()) + "feet. Rotation:  " + (vs.getTargetYaw() + " / " + DriveController.Clamp(rotation,-1,1)));
+
+    if(vs.getTargetDistence() <= 10){
+      //speed = 0;
+    }
+
+    //dc.Drive(-(stick.getY() * 0.5),stick.getX());
+    //dc.Drive(0.05, -0.025);
+    //System.out.print("Driving");
+
+    // vs.getTargetDistence() > 2.5
+    rotation = DriveController.Clamp(rotation/30, -0.5, 0.5);
+    System.out.println("Rot: " + rotation + " |  Distence > " + (vs.getTargetDistence() * 39.37));
+
+    if(stick.getRightTriggerAxis() > 0){
+      dc.setDrive(true,stick.getLeftY());
+    }
+    else if(stick.getLeftTriggerAxis() > 0){
+      if(vs.getBestTarget() != null){
+        if(Math.abs(rotation) > 0.15){
+          //dc.setDrive(rotation * speed,rotation * speed);
+          dc.setDrive(false,-rotation);
+        }
+        else{
+          double disSpeed = -pid.calculate(vs.getTargetDistence());
+          //if(disSpeed > )
+          dc.setDrive(true, -1);
+        }
+      }
+      else{
+        dc.setDrive(false, 0.25);
+      }
     }
     else{
-      dc.setDrive(0, 0);
+      dc.setDrive(false,0);
     }
-    
   }
 
   @Override

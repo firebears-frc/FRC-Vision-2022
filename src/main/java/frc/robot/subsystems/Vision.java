@@ -18,7 +18,6 @@ import edu.wpi.first.math.util.Units;
 public class Vision extends SubsystemBase {
   /** Creates a new Vision Subsystem. */
 
-  // photon camera is used for 
   private PhotonCamera photoncam;
   PhotonTrackedTarget PhotonTarget;
 
@@ -26,12 +25,11 @@ public class Vision extends SubsystemBase {
   private double camHeight;
   private double targetHeight;
   private double camPitch;
-  public Vision(String CameraName) {
+  public Vision(String CameraName, double cH, double tH, double cP) {
     photoncam = new PhotonCamera(CameraName);
-    // set the hight width and pitch (Y) of 
-    camHeight = Units.inchesToMeters(30);
-    targetHeight = Units.inchesToMeters(50);
-    camPitch = Units.degreesToRadians(0);
+    camHeight = cH;
+    targetHeight = tH;
+    camPitch = cP;
   }
 
   // every update we get the best target for the Vision Subsystem
@@ -42,7 +40,6 @@ public class Vision extends SubsystemBase {
 
     if(result.hasTargets()){
       PhotonTarget = photoncam.getLatestResult().getBestTarget();
-      updateTargetYaw();
     }
     else{
       PhotonTarget = null;
@@ -51,28 +48,14 @@ public class Vision extends SubsystemBase {
 
   /*      Functions That Return Values To Main.Java           */
 
-  // return the best target [BIGGEST / BEST IN CENTER / ECT]
   public PhotonTrackedTarget getBestTarget(){
     return PhotonTarget;
   }
 
-  // Returns Yaw (-1,1) : Edited For Wheels & Other
-  // Driving Functionality
+  // returns yaw
   public double getTargetYaw(){
     if(PhotonTarget != null){
-      return PhotonTarget.getYaw()/30;
-    }
-    else{
-      return 0;
-    }
-  }
-
-
-  // return the area of the target
-  // being larger is closer to the target
-  public double getTargetArea(){
-    if(PhotonTarget != null){
-      return PhotonTarget.getArea();
+      return PhotonTarget.getYaw();
     }
     else{
       return 0;
@@ -81,28 +64,11 @@ public class Vision extends SubsystemBase {
 
 
   // returns distences in meters
-  // Currently Not Working
   public double getTargetDistence(){
     return PhotonUtils.calculateDistanceToTargetMeters(
             camHeight,
             targetHeight,
             camPitch,
-            Units.degreesToRadians(PhotonTarget.getPitch()))/5;
-  }
-
-  double robotYaw;
-  double targetYaw;
-
-  public void getRobotYaw(double y){
-    robotYaw = y;
-
-  }
-
-  void updateTargetYaw(){
-    targetYaw = PhotonTarget.getYaw();
-  }
-
-  public double returnCircularYaw(){
-    return targetYaw + robotYaw;
+            Units.degreesToRadians(PhotonTarget.getPitch()));
   }
 }

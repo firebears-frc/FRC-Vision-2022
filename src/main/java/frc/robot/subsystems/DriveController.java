@@ -47,16 +47,48 @@ public class DriveController extends SubsystemBase {
     backDrive.tankDrive(speed, speed);
   */
 
-  public void setDrive(boolean forward,double rotation){
-    if(forward){
-      robotDrive.tankDrive(-rotation, rotation);
-      return;
-    }
-    robotDrive.tankDrive(rotation, rotation);
+  public void setTurbo(boolean t){
+    Turbo = t;
   }
 
-  public void Drive(double speed,double rotation){
-    //Drive the robot using Speed & Rotation  
+  boolean Turbo;
+  public void setDrive(double speed,double rotation){
+    if(Math.abs(speed) < 0.15) speed = 0;
+    if(Math.abs(rotation) < 0.15) rotation = 0;
+
+    System.out.println("SPEED: " + speed/1.5 + " / ROT: " + rotation);
+
+    if(Math.abs(speed/1.5) > Math.abs(rotation)){
+      if(!Turbo) speed = speed *0.75;
+      robotDrive.tankDrive(-speed,speed);
+    }
+    else if(Math.abs(rotation) > Math.abs(speed)){
+      if(!Turbo) rotation = rotation *0.75;
+      robotDrive.tankDrive(rotation,rotation);
+    }
+    else{
+      robotDrive.tankDrive(0, 0);
+    }
+  }
+
+  public void setDriveV(double speed,double rotation, double minDist){
+    if(Math.abs(speed) < minDist) speed = 0;
+    if(Math.abs(rotation) < 0.15) rotation = 0;
+
+    System.out.println("SPEED: " + speed/1.5 + " / ROT: " + rotation);
+
+    if(Math.abs(speed/3) > Math.abs(rotation)){
+      speed = 1/speed;
+      if(!Turbo) speed = speed *0.75;
+      robotDrive.tankDrive(-speed,speed);
+    }
+    else if(Math.abs(rotation) > Math.abs(speed)){
+      if(!Turbo) rotation = rotation *0.75;
+      robotDrive.tankDrive(rotation,rotation);
+    }
+    else{
+      robotDrive.tankDrive(0, 0);
+    }
   }
 
   public static double Clamp(double x, double min, double max){

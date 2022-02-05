@@ -8,19 +8,11 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-<<<<<<< HEAD
 import edu.wpi.first.wpilibj.XboxController;
-=======
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
->>>>>>> parent of e535186 (Updated Driver Controller)
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.DriveController;
 import frc.robot.subsystems.Vision;
 
-import java.io.Console;
-
-import edu.wpi.first.math.controller.PIDController;
 
 //
 
@@ -31,31 +23,20 @@ import edu.wpi.first.math.controller.PIDController;
  * project.
  */
 public class Robot extends TimedRobot {
-<<<<<<< HEAD
   XboxController stick = new XboxController(0);
-=======
-  private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
-  Joystick stick = new Joystick(0);
->>>>>>> parent of e535186 (Updated Driver Controller)
-
-  /* OLD Robot ID's
+  /* OLD Robot ID's From 2019 Provided by Nick S.
   final int frontLeftID = 4;
   final int rearLeftID = 5;
   final int frontRightID = 3;
   final int rearRightID = 2;
   */
 
-  final int frontLeftID = 2;
-  final int rearLeftID = 3;
-  final int frontRightID = 5;
-  final int rearRightID = 4;
+  final int frontLeftID = 4;
+  final int rearLeftID = 5;
+  final int frontRightID = 3;
+  final int rearRightID = 2;
 
-  final double camHeight = Units.inchesToMeters(17);
-  final double targetHeight = Units.inchesToMeters(48);
-
-<<<<<<< HEAD
   final double camHeight = Units.inchesToMeters(19);
   final double targetHeight = Units.inchesToMeters(19);
 
@@ -63,14 +44,6 @@ public class Robot extends TimedRobot {
   private Vision vs = new Vision("gloworm");
 
   private PIDController pid = new PIDController(0.75, 0, 0);
-=======
-  final double ANGULAR_P = 0.1;
-  final double ANGULAR_D = 0.0;
-  PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
-
-  private DriveController dc = new DriveController(frontLeftID,frontRightID,rearLeftID,rearRightID);
-  private Vision vs = new Vision("gloworm",camHeight,targetHeight,0);
->>>>>>> parent of e535186 (Updated Driver Controller)
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -80,11 +53,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-<<<<<<< HEAD
     pid.setTolerance(0.15);
-=======
-    m_robotContainer = new RobotContainer();
->>>>>>> parent of e535186 (Updated Driver Controller)
   }
 
   /**
@@ -115,16 +84,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-<<<<<<< HEAD
     dc.Break(false);
-=======
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
->>>>>>> parent of e535186 (Updated Driver Controller)
   }
 
   /** This function is called periodically during autonomous. */
@@ -145,33 +105,18 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-<<<<<<< HEAD
     // give the yaw position of the robot
     vs.getRobotYaw(0);
-    dc.setDrive(0,-0.75);
-=======
-    double speed = Math.min(0.05 * vs.getTargetDistence(), 0.1);
-    // Calculate angular turn power
-    // -1.0 required to ensure positive PID controller effort _increases_ yaw
-    double rotation = -turnController.calculate(vs.getTargetYaw(),0);
-
-    SmartDashboard.putNumber("VisionTarget_Distence", vs.getTargetDistence());
-
-    // set speed faster or slower based on joysticks Left Stick's Position
-    speed = stick.getY() * 0.25;
-    System.out.printf("Speed : " + speed + " Distence:  " + vs.getTargetDistence());
-
-    if(vs.getTargetDistence() <= 10){
-      //speed = 0;
+    if(stick.getLeftBumper() == true){
+      dc.setDrive(stick.getLeftY(), stick.getRightX());
     }
-
-    if(vs.getBestTarget() != null){
-      dc.Drive(speed, vs.getTargetYaw());
+    else if(stick.getRightBumper() == true){
+      dc.setDrive(0, stick.getRightX());
     }
     else{
-      dc.Drive(0,0);
+      dc.setDrive(0, 0);
     }
->>>>>>> parent of e535186 (Updated Driver Controller)
+    
   }
 
   @Override

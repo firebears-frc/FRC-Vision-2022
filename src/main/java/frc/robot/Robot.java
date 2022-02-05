@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.DriveController;
 import frc.robot.subsystems.Vision;
+import com.kauailabs.navx.frc.*;
 
 
 //
@@ -23,7 +24,7 @@ import frc.robot.subsystems.Vision;
  * project.
  */
 public class Robot extends TimedRobot {
-  XboxController stick = new XboxController(0);
+  XboxController stick = new XboxController(0); 
 
   /* OLD Robot ID's From 2019 Provided by Nick S.
   final int frontLeftID = 4;
@@ -31,19 +32,27 @@ public class Robot extends TimedRobot {
   final int frontRightID = 3;
   final int rearRightID = 2;
   */
+  
+  
+  /* OLD Robot ID's From 2020 [NEWER ROBOT] Provided by Nick S.
+  final int frontLeftID = 2;
+  final int rearLeftID = 3;
+  final int frontRightID = 4;
+  final int rearRightID = 5;
+  */
 
-  final int frontLeftID = 4;
-  final int rearLeftID = 5;
-  final int frontRightID = 3;
-  final int rearRightID = 2;
+  final int frontLeftID = 2;
+  final int rearLeftID = 3;
+  final int frontRightID = 4;
+  final int rearRightID = 5;
 
-  final double camHeight = Units.inchesToMeters(19);
-  final double targetHeight = Units.inchesToMeters(19);
+  final double camHeight = Units.inchesToMeters(25.2);
+  final double targetHeight = Units.inchesToMeters(68);
 
   private DriveController dc = new DriveController(frontLeftID,frontRightID,rearLeftID,rearRightID);
-  private Vision vs = new Vision("gloworm",camHeight,targetHeight,32.0);
+  private Vision vs = new Vision("gloworm",camHeight,targetHeight,Units.degreesToRadians(0.0));
 
-  private PIDController pid = new PIDController(0.75, 0, 0);
+  private PIDController pid = new PIDController(0.1, 0.0, 0.05);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -53,6 +62,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    pid.setTolerance(0.5);
   }
 
   /**
@@ -97,59 +107,23 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    dc.Break(true);
+    dc.Break(false);
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    double speed = Math.pow(vs.getTargetYaw()/25, 1.1);
-    // Calculate angular turn power
-    // -1.0 required to ensure positive PID controller effort _increases_ yaw
-    double rotation = 0;
-
+    System.out.println("Dist: " + Units.metersToInches(vs.getTargetDistence()) + ".in");
+    /*
     if(vs.getBestTarget() != null){
-      rotation = pid.calculate(vs.getTargetYaw());
-    }
-
-    // set speed faster or slower based on joysticks Left Stick's Position
-    //speed = stick.getY() * 0.25;
-    //System.out.printf("\n----->Target Dist : " + Units.metersToFeet(vs.getTargetDistence()) + "feet. Rotation:  " + (vs.getTargetYaw() + " / " + DriveController.Clamp(rotation,-1,1)));
-
-    if(vs.getTargetDistence() <= 10){
-      //speed = 0;
-    }
-
-    //dc.Drive(-(stick.getY() * 0.5),stick.getX());
-    //dc.Drive(0.05, -0.025);
-    //System.out.print("Driving");
-
-    // vs.getTargetDistence() > 2.5
-    rotation = DriveController.Clamp(rotation/30, -0.5, 0.5);
-    System.out.println("Rot: " + rotation + " |  Distence > " + (vs.getTargetDistence() * 39.37));
-
-    if(stick.getRightTriggerAxis() > 0){
-      dc.setDrive(true,stick.getLeftY());
-    }
-    else if(stick.getLeftTriggerAxis() > 0){
-      if(vs.getBestTarget() != null){
-        if(Math.abs(rotation) > 0.15){
-          //dc.setDrive(rotation * speed,rotation * speed);
-          dc.setDrive(false,-rotation);
-        }
-        else{
-          double disSpeed = -pid.calculate(vs.getTargetDistence());
-          //if(disSpeed > )
-          dc.setDrive(true, -1);
-        }
-      }
-      else{
-        dc.setDrive(false, 0.25);
-      }
+      dc.Break(false);
+      System.out.println(-pid.calculate(vs.getTargetYaw()));
+      dc.setDrive(vs.getTargetYaw(), 0);
     }
     else{
-      dc.setDrive(false,0);
+      dc.setDrive(0,0);
     }
+    */
   }
 
   @Override

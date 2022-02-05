@@ -34,8 +34,8 @@ public class DriveController extends SubsystemBase {
     backR = new CANSparkMax(br,MotorType.kBrushless);
 
     //make back wheels follow front wheels
-    backL.follow(frontL);
-    backR.follow(backR);
+    //backL.follow(frontL);
+    //backR.follow(backR);
 
     // create a drifferentialDrive and give it our CANSparkMax's
     robotDrive = new DifferentialDrive(frontL, frontR);
@@ -74,12 +74,12 @@ public class DriveController extends SubsystemBase {
     System.out.println("SPEED: " + speed/1.5 + " / ROT: " + rotation);
 
     if(Math.abs(speed/1.5) > Math.abs(rotation)){
-      if(!Turbo) speed = speed *0.75;
-      robotDrive.tankDrive(-speed,speed);
+      //if(!Turbo) speed = speed * 0.75;
+      robotDrive.tankDrive(speed,speed);
     }
     else if(Math.abs(rotation) > Math.abs(speed)){
-      if(!Turbo) rotation = rotation *0.75;
-      robotDrive.tankDrive(rotation,rotation);
+      //if(!Turbo) rotation = rotation *0.75;
+      robotDrive.tankDrive(-rotation,rotation);
     }
     else{
       robotDrive.tankDrive(0, 0);
@@ -104,5 +104,12 @@ public class DriveController extends SubsystemBase {
     else{
       robotDrive.tankDrive(0, 0);
     }
+  }
+
+  //Clamp Function
+  public static double Clamp(double rot, double min, double max){
+    if(rot > max) rot = max;
+    if(rot < min) rot = min;
+    return rot;
   }
 }

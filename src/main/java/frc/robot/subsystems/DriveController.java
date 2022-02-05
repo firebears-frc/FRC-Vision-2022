@@ -13,7 +13,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.*;
-import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 // DriveController Class extending Subsystem to be called in main robotcode
@@ -35,10 +34,11 @@ public class DriveController extends SubsystemBase {
 
     //make back wheels follow front wheels
     backL.follow(frontL);
-    backR.follow(frontR);
+    backR.follow(backR);
 
     // create a drifferentialDrive and give it our CANSparkMax's
     robotDrive = new DifferentialDrive(frontL, frontR);
+<<<<<<< HEAD
     Break(true);
   }
 
@@ -49,6 +49,8 @@ public class DriveController extends SubsystemBase {
 
   public void setTurbo(boolean t){
     Turbo = t;
+=======
+>>>>>>> parent of e535186 (Updated Driver Controller)
   }
 
   boolean Turbo;
@@ -88,33 +90,6 @@ public class DriveController extends SubsystemBase {
     }
     else{
       robotDrive.tankDrive(0, 0);
-    }
-  }
-
-  public static double Clamp(double x, double min, double max){
-    if(x > max){
-      return max;
-    }
-    else if(x < min){
-      return min;
-    }
-    else{
-      return x;
-    }
-  }
-
-  public void Break(boolean enabled){
-    if(enabled){
-      frontL.setIdleMode(IdleMode.kBrake);
-      frontR.setIdleMode(IdleMode.kBrake);
-      backL.setIdleMode(IdleMode.kBrake);
-      backR.setIdleMode(IdleMode.kBrake);
-    }
-    else{
-      frontL.setIdleMode(IdleMode.kCoast);
-      frontR.setIdleMode(IdleMode.kCoast);
-      backL.setIdleMode(IdleMode.kCoast);
-      backR.setIdleMode(IdleMode.kCoast);
     }
   }
 }

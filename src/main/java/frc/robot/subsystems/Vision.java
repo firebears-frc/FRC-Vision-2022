@@ -83,7 +83,6 @@ public class Vision extends SubsystemBase {
   // returns distences in meters
   // Currently Not Working
   public double getTargetDistence(){
-    if(PhotonTarget == null) return 0;
     return PhotonUtils.calculateDistanceToTargetMeters(
             camHeight,
             targetHeight,

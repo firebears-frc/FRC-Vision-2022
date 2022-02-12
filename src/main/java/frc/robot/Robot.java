@@ -41,18 +41,7 @@ public class Robot extends TimedRobot {
   final int rearRightID = 5;
   */
 
-  final int frontLeftID = 2;
-  final int rearLeftID = 3;
-  final int frontRightID = 4;
-  final int rearRightID = 5;
-
-  final double camHeight = Units.inchesToMeters(25.2);
-  final double targetHeight = Units.inchesToMeters(68);
-
-  private DriveController dc = new DriveController(frontLeftID,frontRightID,rearLeftID,rearRightID);
-  private Vision vs = new Vision("gloworm",camHeight,targetHeight,Units.degreesToRadians(0.0));
-
-  private PIDController pid = new PIDController(0.1, 0.0, 0.05);
+  //private Vision vs = new Vision("gloworm",camHeight,targetHeight,Units.degreesToRadians(0.0));
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -62,7 +51,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    pid.setTolerance(0.5);
+    //pid.setTolerance(0.5);
   }
 
   /**
@@ -91,38 +80,28 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    dc.Break(false);
+    //dc.Break(false);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    double rotation = 0;
-
-    if(vs.getBestTarget() != null){
-      rotation = pid.calculate(vs.getTargetYaw());
-    }
-    System.out.println("Rot: " + rotation + " |  Distence > " + vs.getTargetDistence());
   }
 
   @Override
   public void teleopInit() {
-    dc.Break(false);
+    //dc.Break(false);
   }
 
   /** This function is called periodically during operator control. */
+  float robotYaw = 0;
   @Override
   public void teleopPeriodic() {
-    System.out.println("Dist: " + Units.metersToInches(vs.getTargetDistence()) + ".in");
     /*
-    if(vs.getBestTarget() != null){
-      dc.Break(false);
-      System.out.println(-pid.calculate(vs.getTargetYaw()));
-      dc.setDrive(vs.getTargetYaw(), 0);
-    }
-    else{
-      dc.setDrive(0,0);
-    }
+    robotYaw += stick.getLeftX();
+    if(robotYaw >= 360) robotYaw -= 360;
+    vs.setRobotYaw(robotYaw);
+    System.out.println("ROBOT YAW: " + vs.getLastYaw());
     */
   }
 

@@ -40,7 +40,7 @@ public class Vision extends SubsystemBase {
 
     if(result.hasTargets()){
       PhotonTarget = photoncam.getLatestResult().getBestTarget();
-      //updateVisionYaw();
+      updateVisionYaw();
     }
     else{
       PhotonTarget = null;
@@ -75,17 +75,20 @@ public class Vision extends SubsystemBase {
   }
 
   double robotYaw;
-  double visionYaw;
+  double visionYaw
+  
 
   public void setRobotYaw(double y){
     robotYaw = y;
   }
 
   void updateVisionYaw(){
+    if(PhotonTarget == null) return;
     visionYaw = PhotonTarget.getYaw();
   }
 
   public double getLastYaw(){
+    System.out.println(visionYaw + robotYaw);
     return visionYaw + robotYaw;
   }
 }

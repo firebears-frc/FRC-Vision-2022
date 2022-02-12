@@ -86,6 +86,27 @@ public class DriveController extends SubsystemBase {
     }
   }
 
+
+  // able to slight left + right with tank drive
+  public void Drive(double speed, double rotation){
+    if(speed/2 > rotation){
+      if(rotation > 0){
+        //slight left
+        robotDrive.tankDrive(speed, speed - (rotation/2));
+      }
+      else{
+        //slight right
+        robotDrive.tankDrive(speed - (rotation/2),speed);
+      }
+    }
+    else if(rotation > speed/2){
+      robotDrive.tankDrive(-(rotation),rotation);
+    }
+    else{
+      robotDrive.tankDrive(0, 0);
+    }
+  }
+
   public void setDriveV(double speed,double rotation, double minDist){
     if(Math.abs(speed) < minDist) speed = 0;
     if(Math.abs(rotation) < 0.15) rotation = 0;

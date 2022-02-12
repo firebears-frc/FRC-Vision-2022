@@ -4,15 +4,10 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.DriveController;
-import frc.robot.subsystems.Vision;
-import com.kauailabs.navx.frc.*;
 
 
 //
@@ -41,6 +36,14 @@ public class Robot extends TimedRobot {
   final int rearRightID = 5;
   */
 
+  /* NEW-NEW Robot ID's From 2022 [NEWEst ROBOT] Provided by Nick S.
+  final int frontLeftID = 2;
+  final int rearLeftID = 3;
+  final int frontRightID = 4;
+  final int rearRightID = 5;
+  */
+
+  private DriveController dc = new DriveController(2, 3, 4, 5);
   //private Vision vs = new Vision("gloworm",camHeight,targetHeight,Units.degreesToRadians(0.0));
 
   /**
@@ -90,19 +93,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    //dc.Break(false);
+    dc.Break(true);
   }
 
   /** This function is called periodically during operator control. */
   float robotYaw = 0;
   @Override
   public void teleopPeriodic() {
-    /*
-    robotYaw += stick.getLeftX();
-    if(robotYaw >= 360) robotYaw -= 360;
-    vs.setRobotYaw(robotYaw);
-    System.out.println("ROBOT YAW: " + vs.getLastYaw());
-    */
+    dc.Drive(stick.getLeftY(), stick.getLeftX());
   }
 
   @Override

@@ -75,7 +75,7 @@ public class Vision extends SubsystemBase {
   }
 
   double robotYaw;
-  double visionYaw
+  double visionYaw;
   
 
   public void setRobotYaw(double y){
